@@ -18,6 +18,14 @@ nil = BL const
 cons : a -> BList a -> BList a
 cons hd (BL tl) = BL (\n, c => c hd (tl n c))
 
+(++) : BList a -> BList a -> BList a
+x ++ y = foldr cons y x
+
+Semigroup (BList a) where
+  (<+>) = (++)
+
+Monoid (BList a) where
+  neutral = nil
 
 Functor BList where
   map f = foldr (cons . f) nil
@@ -74,10 +82,11 @@ drop n xs = foldr f (const nil) xs n where
 
 dropWhile : (a -> Bool) -> BList a -> BList a
 dropWhile p xs = foldr f (const nil) xs True where
-  f elem acc stillDropping = if stillDropping && p elem then
-    acc True
-  else
-    cons elem (acc False)
+  f elem acc stillDropping =
+    if stillDropping && p elem then
+      acc True
+    else
+      cons elem (acc False)
 
 zipWith : (a -> b -> c) -> BList a -> BList b -> BList c
 zipWith f l r = foldr op (const nil) l r where
@@ -86,7 +95,6 @@ zipWith f l r = foldr op (const nil) l r where
 
 zip : BList a -> BList b -> BList (a, b)
 zip = zipWith MkPair
-
 
 Eq a => Eq (BList a) where
   (==) a b = (length a == length b) && all id (zipWith (==) a b)
