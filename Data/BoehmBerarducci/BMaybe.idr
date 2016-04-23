@@ -29,10 +29,3 @@ Eq a => Eq (BMaybe a) where
 
 Show a => Show (BMaybe a) where
   showPrec d = fold "BNothing" (\a => showCon d "BJust" (showArg a))
-
-
-exampleNothing : BMaybe Int
-exampleNothing = nothing
-
-exampleJust : BMaybe Int
-exampleJust = just 1

@@ -105,10 +105,3 @@ Show a => Show (BList a) where
     show' ys = case unroll (map show ys) of
       Nothing       => ""
       Just (hd, tl) => hd ++ concatMap ((++) ", ") tl
-
-
-exampleList : BList Int
-exampleList = cons 1 (cons 2 (cons 3 nil))
-
-exampleNil : BList Int
-exampleNil = nil

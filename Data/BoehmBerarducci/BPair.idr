@@ -22,7 +22,3 @@ Functor (BPair a) where
 
 (Show a, Show b) => Show (BPair a b) where
   show = fold (\a, b => "BPair (" ++ show a ++ ", " ++ show b ++ ")")
-
-
-examplePr : BPair Int String
-examplePr = pair 1 "asdf"

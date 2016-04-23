@@ -26,9 +26,3 @@ right b = BE (\l, r => r b)
 
 Functor (BEither a) where
   map f = fold left (right . f)
-
-exampleL : BEither Int String
-exampleL = left 1
-
-exampleR : BEither Int String
-exampleR = right "asdf"
