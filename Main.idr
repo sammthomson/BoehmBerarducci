@@ -9,11 +9,11 @@ import Data.BoehmBerarducci.BEither
 %access public export
 
 
-exampleList : BList Int
-exampleList = cons 1 (cons 2 (cons 3 nil))
-
 exampleNil : BList Int
 exampleNil = nil
+
+exampleCons : BList Int
+exampleCons = cons 1 (cons 2 (cons 3 nil))
 
 
 exampleNothing : BMaybe Int
@@ -36,10 +36,10 @@ exampleRight = right "asdf"
 
 main : IO ()
 main = do
-  putStrLn $ show exampleList
   putStrLn $ show exampleNil
-  putStrLn $ show exampleJust
+  putStrLn $ show exampleCons
   putStrLn $ show exampleNothing
+  putStrLn $ show exampleJust
   putStrLn $ show examplePr
   putStrLn $ show exampleLeft
   putStrLn $ show exampleRight

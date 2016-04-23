@@ -4,14 +4,13 @@ module Data.BoehmBerarducci.BPair
 %access public export
 
 
-data BPair : Type -> Type -> Type where
-  BP : ({pr: Type} -> (f: a -> b -> pr) -> pr) -> BPair a b
+data BPair a b = MkBPair ({r: Type} -> (pair: a -> b -> r) -> r)
 
 fold : (a -> b -> r) -> BPair a b -> r
-fold f (BP x) = x f
+fold f (MkBPair x) = x f
 
 pair : a -> b -> BPair a b
-pair a b = BP (\f => f a b)
+pair a b = MkBPair (\f => f a b)
 
 
 Functor (BPair a) where

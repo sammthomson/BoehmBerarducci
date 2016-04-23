@@ -4,19 +4,18 @@ module Data.BoehmBerarducci.BList
 %access public export
 
 
-data BList : Type -> Type where
-  BL : ({lst: Type} -> (cons: a -> lst -> lst) -> (nil: lst) -> lst) -> BList a
+data BList a = MkBList ({r: Type} -> (cons: a -> r -> r) -> (nil: r) -> r)
 
 
 Foldable BList where
-  foldr op z (BL xs) = xs op z
+  foldr op z (MkBList xs) = xs op z
 
 
 cons : a -> BList a -> BList a
-cons hd (BL tl) = BL (\c, n => c hd (tl c n))
+cons hd (MkBList tl) = MkBList (\c, n => c hd (tl c n))
 
 nil : BList a
-nil = BL (\c, n => n)
+nil = MkBList (\c, n => n)
 
 (++) : BList a -> BList a -> BList a
 x ++ y = foldr cons y x

@@ -4,16 +4,16 @@ module Data.BoehmBerarducci.BMaybe
 %access public export
 
 
-data BMaybe a = BM ({m: Type} -> (nothing: m) -> (just: a -> m) -> m)
+data BMaybe a = MkBMaybe ({r: Type} -> (nothing: r) -> (just: a -> r) -> r)
 
-fold : m -> (a -> m) -> BMaybe a -> m
-fold n j (BM x) = x n j
+fold : r -> (a -> r) -> BMaybe a -> r
+fold n j (MkBMaybe x) = x n j
 
 nothing : {a : Type} -> BMaybe a
-nothing = BM (\n, j => n)
+nothing = MkBMaybe (\n, j => n)
 
 just : a -> BMaybe a
-just a = BM (\n, j => j a)
+just a = MkBMaybe (\n, j => j a)
 
 Functor BMaybe where
   map f = fold nothing (just . f)

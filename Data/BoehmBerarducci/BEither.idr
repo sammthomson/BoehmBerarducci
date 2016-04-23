@@ -4,17 +4,16 @@ module Data.BoehmBerarducci.BEither
 %access public export
 
 
-data BEither : Type -> Type -> Type where
-  BE : ({e: Type} -> (l: a -> e) -> (r: b -> e) -> e) -> BEither a b
+data BEither a b = MkBEither ({r: Type} -> (left: a -> r) -> (right: b -> r) -> r)
 
-fold : (a -> e) -> (b -> e) -> BEither a b -> e
-fold l r (BE x) = x l r
+fold : (a -> r) -> (b -> r) -> BEither a b -> r
+fold l r (MkBEither x) = x l r
 
 left : {b : Type} -> a -> BEither a b
-left a = BE (\l, r => l a)
+left a = MkBEither (\l, r => l a)
 
 right : {a : Type} -> b -> BEither a b
-right b = BE (\l, r => r b)
+right b = MkBEither (\l, r => r b)
 
 (Eq a, Eq b) => Eq (BEither a b) where
   (==) = fold (\a => fold ((==) a) (const False)) (\b => fold (const False) ((==) b))
