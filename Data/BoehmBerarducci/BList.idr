@@ -104,7 +104,7 @@ Show a => Show (BList a) where
   show xs = "BL [" ++ (show' xs) ++ "]" where
     show' ys = case unroll (map show ys) of
       Nothing       => ""
-      Just (hd, tl) => hd ++ concat (map ((++) ", ") tl)
+      Just (hd, tl) => hd ++ concatMap ((++) ", ") tl
 
 
 example : BList Int
