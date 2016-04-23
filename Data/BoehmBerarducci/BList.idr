@@ -5,18 +5,18 @@ module Data.BoehmBerarducci.BList
 
 
 data BList : Type -> Type where
-  BL : ({lst: Type} -> (nil: lst) -> (cons: a -> lst -> lst) -> lst) -> BList a
+  BL : ({lst: Type} -> (cons: a -> lst -> lst) -> (nil: lst) -> lst) -> BList a
 
 
 Foldable BList where
-  foldr f z (BL xs) = xs z f
+  foldr op z (BL xs) = xs op z
 
-
-nil : BList a
-nil = BL const
 
 cons : a -> BList a -> BList a
-cons hd (BL tl) = BL (\n, c => c hd (tl n c))
+cons hd (BL tl) = BL (\c, n => c hd (tl c n))
+
+nil : BList a
+nil = BL (\c, n => n)
 
 (++) : BList a -> BList a -> BList a
 x ++ y = foldr cons y x
@@ -51,8 +51,8 @@ length = foldr (const ((+) 1)) 0
 
 
 reverse : BList a -> BList a
-reverse xs = foldr f id xs nil where
-  f elem acc = \inner => acc (cons elem inner)
+reverse xs = foldr op id xs nil where
+  op elem prependInner = \outer => prependInner (cons elem outer)
 
 last' : BList a -> Maybe a
 last' = head' . reverse
@@ -61,48 +61,54 @@ init' : BList a -> Maybe (BList a)
 init' = map reverse . tail' . reverse
 
 filter : (a -> Bool) -> BList a -> BList a
-filter p = foldr f nil where
-  f elem acc = if p elem then cons elem acc else acc
+filter p = foldr op nil where
+  op elem acc = if (p elem) then (cons elem acc) else acc
 
 takeWhile : (a -> Bool) -> BList a -> BList a
-takeWhile p = foldr f nil where
-  f elem acc = if p elem then cons elem acc else nil
+takeWhile p = foldr op nil where
+  op elem acc = if (p elem) then (cons elem acc) else nil
 
 take : Nat -> BList a -> BList a
-take n xs = foldr f (const nil) xs n where
-  f elem acc n' = case n' of
-    Z   => nil
-    S k => cons elem (acc k)
+take n xs = foldr op (const nil) xs n where
+  op elem acc k = case k of
+    Z    => nil
+    S k' => cons elem (acc k')
 
 drop : Nat -> BList a -> BList a
-drop n xs = foldr f (const nil) xs n where
-  f elem acc n' = case n' of
-    Z   => cons elem (acc Z)
-    S k => acc k
+drop n xs = foldr op (const nil) xs n where
+  op elem acc k = case k of
+    Z    => cons elem (acc Z)
+    S k' => acc k'
 
 dropWhile : (a -> Bool) -> BList a -> BList a
-dropWhile p xs = foldr f (const nil) xs True where
-  f elem acc stillDropping =
-    if stillDropping && p elem then
+dropWhile p xs = foldr op (const nil) xs True where
+  op elem acc stillDropping =
+    if (stillDropping && p elem) then
       acc True
     else
       cons elem (acc False)
 
 zipWith : (a -> b -> c) -> BList a -> BList b -> BList c
 zipWith f l r = foldr op (const nil) l r where
-  op a acc r2 = foldr op' nil r2 where
-    op' b _ = cons (f a b) (acc (drop 1 r2))
+  op a zipWithLTail = \r' => case unroll r' of
+    Nothing         => nil
+    Just (b, rTail) => cons (f a b) (zipWithLTail rTail)
 
 zip : BList a -> BList b -> BList (a, b)
 zip = zipWith MkPair
 
 Eq a => Eq (BList a) where
-  (==) a b = (length a == length b) && all id (zipWith (==) a b)
+  (==) a b = (length a == length b) && all (uncurry (==)) (zip a b)
 
 Show a => Show (BList a) where
-  showPrec d = showCon d "BL" . showArg . toList
+  show xs = "BL [" ++ (show' xs) ++ "]" where
+    show' ys = case unroll (map show ys) of
+      Nothing       => ""
+      Just (hd, tl) => hd ++ concat (map ((++) ", ") tl)
 
 
 example : BList Int
 example = cons 1 (cons 2 (cons 3 nil))
 
+nilExample : BList Int
+nilExample = nil
