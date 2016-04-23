@@ -52,7 +52,7 @@ length = foldr (const ((+) 1)) 0
 
 reverse : BList a -> BList a
 reverse xs = foldr op id xs nil where
-  op elem prependInner = \outer => prependInner (cons elem outer)
+  op a prependInner = \outer => prependInner (cons a outer)
 
 last' : BList a -> Maybe a
 last' = head' . reverse
@@ -62,31 +62,31 @@ init' = map reverse . tail' . reverse
 
 filter : (a -> Bool) -> BList a -> BList a
 filter p = foldr op nil where
-  op elem acc = if (p elem) then (cons elem acc) else acc
+  op a acc = if (p a) then (cons a acc) else acc
 
 takeWhile : (a -> Bool) -> BList a -> BList a
 takeWhile p = foldr op nil where
-  op elem acc = if (p elem) then (cons elem acc) else nil
+  op a acc = if (p a) then (cons a acc) else nil
 
 take : Nat -> BList a -> BList a
 take n xs = foldr op (const nil) xs n where
-  op elem acc k = case k of
+  op a takeXsTail k = case k of
     Z    => nil
-    S k' => cons elem (acc k')
+    S k' => cons a (takeXsTail k')
 
 drop : Nat -> BList a -> BList a
 drop n xs = foldr op (const nil) xs n where
-  op elem acc k = case k of
-    Z    => cons elem (acc Z)
-    S k' => acc k'
+  op a dropXsTail k = case k of
+    Z    => cons a (dropXsTail Z)
+    S k' => dropXsTail k'
 
 dropWhile : (a -> Bool) -> BList a -> BList a
 dropWhile p xs = foldr op (const nil) xs True where
-  op elem acc stillDropping =
-    if (stillDropping && p elem) then
-      acc True
+  op a dropXsTail stillDropping =
+    if (stillDropping && p a) then
+      dropXsTail True
     else
-      cons elem (acc False)
+      cons a (dropXsTail False)
 
 zipWith : (a -> b -> c) -> BList a -> BList b -> BList c
 zipWith f l r = foldr op (const nil) l r where
