@@ -21,7 +21,7 @@ Functor (BPair a) where
   (==) = fold (\xa, xb => fold (\ya, yb => xa == ya && xb == yb))
 
 (Show a, Show b) => Show (BPair a b) where
-  show = fold (\a, b => "(" ++ show a ++ ", " ++ show b ++ ")")
+  show = fold (\a, b => "BPair (" ++ show a ++ ", " ++ show b ++ ")")
 
 
 examplePr : BPair Int String

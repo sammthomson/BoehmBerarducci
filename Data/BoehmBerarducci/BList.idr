@@ -101,14 +101,14 @@ Eq a => Eq (BList a) where
   (==) a b = (length a == length b) && all (uncurry (==)) (zip a b)
 
 Show a => Show (BList a) where
-  show xs = "BL [" ++ (show' xs) ++ "]" where
+  show xs = "BList [" ++ (show' xs) ++ "]" where
     show' ys = case unroll (map show ys) of
       Nothing       => ""
       Just (hd, tl) => hd ++ concatMap ((++) ", ") tl
 
 
-example : BList Int
-example = cons 1 (cons 2 (cons 3 nil))
+exampleList : BList Int
+exampleList = cons 1 (cons 2 (cons 3 nil))
 
-nilExample : BList Int
-nilExample = nil
+exampleNil : BList Int
+exampleNil = nil

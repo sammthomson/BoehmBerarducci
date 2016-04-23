@@ -21,7 +21,7 @@ right b = BE (\l, r => r b)
 
 (Show a, Show b) => Show (BEither a b) where
   showPrec d e = showCon d name arg where
-    name = fold (const "L") (const "R") e
+    name = fold (const "BLeft") (const "BRight") e
     arg = fold showArg showArg e
 
 Functor (BEither a) where

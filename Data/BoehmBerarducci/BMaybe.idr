@@ -28,7 +28,7 @@ Eq a => Eq (BMaybe a) where
   (==) = fold (fold True (const False)) (\a => fold False ((==) a))
 
 Show a => Show (BMaybe a) where
-  showPrec d = fold "Nothing" (\a => showCon d "Just" (showArg a))
+  showPrec d = fold "BNothing" (\a => showCon d "BJust" (showArg a))
 
 
 exampleNothing : BMaybe Int
