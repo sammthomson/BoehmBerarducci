@@ -6,12 +6,18 @@ module Data.BoehmBerarducci.BPair
 
 data BPair a b = MkBPair ({r: Type} -> (pair: a -> b -> r) -> r)
 
+||| aka uncurry
 fold : (a -> b -> r) -> BPair a b -> r
 fold f (MkBPair x) = x f
 
 pair : a -> b -> BPair a b
 pair a b = MkBPair (\f => f a b)
 
+fst : BPair a b -> a
+fst = fold (\a, b => a)
+
+snd : BPair a b -> b
+snd = fold (\a, b => b)
 
 Functor (BPair a) where
   map f = fold (\a, b => pair a (f b))

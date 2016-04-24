@@ -36,11 +36,12 @@ exampleRight = right "asdf"
 
 main : IO ()
 main = do
-  putStrLn $ show exampleNil
-  putStrLn $ show exampleCons
-  putStrLn $ show exampleNothing
-  putStrLn $ show exampleJust
-  putStrLn $ show examplePr
-  putStrLn $ show exampleLeft
-  putStrLn $ show exampleRight
+  putStrLn (show exampleNil)
+  putStrLn (show exampleCons)
+  putStrLn (show (zip exampleCons (drop 1 exampleCons)))
+  putStrLn (show exampleNothing)
+  putStrLn (show exampleJust)
+  putStrLn (show examplePr)
+  putStrLn (show exampleLeft)
+  putStrLn (show exampleRight)
   putStrLn ""

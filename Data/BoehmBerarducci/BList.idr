@@ -1,5 +1,8 @@
 module Data.BoehmBerarducci.BList
 
+import Data.BoehmBerarducci.BMaybe
+import Data.BoehmBerarducci.BPair
+
 %default total
 %access public export
 
@@ -33,16 +36,16 @@ Functor BList where
 isEmpty : BList a -> Bool
 isEmpty = foldr (const (const False)) True
 
-roll : Maybe (a, BList a) -> BList a
-roll = maybe nil (uncurry cons)
+roll : BMaybe (BPair a (BList a)) -> BList a
+roll = fold nil (fold cons)
 
-unroll : BList a -> Maybe (a, BList a)
-unroll = foldr (\hd, tl => Just (hd, roll tl)) Nothing
+unroll : BList a -> BMaybe (BPair a (BList a))
+unroll = foldr (\hd, tl => just (pair hd (roll tl))) nothing
 
-head' : BList a -> Maybe a
+head' : BList a -> BMaybe a
 head' = map fst . unroll
 
-tail' : BList a -> Maybe (BList a)
+tail' : BList a -> BMaybe (BList a)
 tail' = map snd . unroll
 
 length : BList a -> Int
@@ -53,10 +56,10 @@ reverse : BList a -> BList a
 reverse xs = foldr op id xs nil where
   op a prependInner = \outer => prependInner (cons a outer)
 
-last' : BList a -> Maybe a
+last' : BList a -> BMaybe a
 last' = head' . reverse
 
-init' : BList a -> Maybe (BList a)
+init' : BList a -> BMaybe (BList a)
 init' = map reverse . tail' . reverse
 
 filter : (a -> Bool) -> BList a -> BList a
@@ -89,18 +92,15 @@ dropWhile p xs = foldr op (const nil) xs True where
 
 zipWith : (a -> b -> c) -> BList a -> BList b -> BList c
 zipWith f l r = foldr op (const nil) l r where
-  op a zipWithLTail = \r' => case unroll r' of
-    Nothing         => nil
-    Just (b, rTail) => cons (f a b) (zipWithLTail rTail)
+  op a zipWithLTail = \r' => fold nil (fold (\b, rTail => cons (f a b) (zipWithLTail rTail))) (unroll r')
 
-zip : BList a -> BList b -> BList (a, b)
-zip = zipWith MkPair
+zip : BList a -> BList b -> BList (BPair a b)
+zip = zipWith pair
 
 Eq a => Eq (BList a) where
-  (==) a b = (length a == length b) && all (uncurry (==)) (zip a b)
+  (==) a b = (length a == length b) && all (fold (==)) (zip a b)
 
 Show a => Show (BList a) where
   show xs = "BList [" ++ (show' xs) ++ "]" where
-    show' ys = case unroll (map show ys) of
-      Nothing       => ""
-      Just (hd, tl) => hd ++ concatMap ((++) ", ") tl
+    show' ys = fold "" (fold (\hd, tl => hd ++ concatMap ((++) ", ") tl)) (unroll (map show ys))
+
