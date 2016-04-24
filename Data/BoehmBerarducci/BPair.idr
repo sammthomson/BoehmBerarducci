@@ -6,9 +6,15 @@ module Data.BoehmBerarducci.BPair
 
 data BPair a b = MkBPair ({r: Type} -> (pair: a -> b -> r) -> r)
 
+foldInto : BPair a b -> (pair: a -> b -> r) -> r
+foldInto (MkBPair x) = x
+
 ||| aka uncurry
 fold : (a -> b -> r) -> BPair a b -> r
-fold f (MkBPair x) = x f
+fold f x = foldInto x f
+
+bUncurry : (a -> b -> r) -> (BPair a b -> r)
+bUncurry = fold
 
 pair : a -> b -> BPair a b
 pair a b = MkBPair (\f => f a b)
