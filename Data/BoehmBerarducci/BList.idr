@@ -2,6 +2,7 @@ module Data.BoehmBerarducci.BList
 
 import Data.BoehmBerarducci.BMaybe
 import Data.BoehmBerarducci.BPair
+import Data.BoehmBerarducci.BNat
 
 %default total
 %access public export
@@ -73,17 +74,17 @@ takeWhile : (a -> Bool) -> BList a -> BList a
 takeWhile p xs = foldInto xs nil op where
   op a acc = if (p a) then (cons a acc) else nil
 
-take : Nat -> BList a -> BList a
+take : BNat -> BList a -> BList a
 take n xs = (foldInto xs (const nil) op) n where
-  op a takeXsTail = \k => case k of
-    Z    => nil
-    S k' => cons a (takeXsTail k')
+  op a takeXsTail = \k => foldInto (unroll k)
+    nil
+    (\k' => cons a (takeXsTail k'))
 
-drop : Nat -> BList a -> BList a
+drop : BNat -> BList a -> BList a
 drop n xs = (foldInto xs (const nil) op) n where
-  op a dropXsTail k = case k of
-    Z    => cons a (dropXsTail Z)
-    S k' => dropXsTail k'
+  op a dropXsTail k = foldInto (unroll k)
+    (cons a (dropXsTail z))
+    (\k' => dropXsTail k')
 
 dropWhile : (a -> Bool) -> BList a -> BList a
 dropWhile p xs = (foldInto xs (const nil) op) True where

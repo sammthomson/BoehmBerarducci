@@ -34,15 +34,19 @@ exampleLeft = left 1
 exampleRight : BEither Int String
 exampleRight = right "asdf"
 
+example2 : BNat
+example2 = (s (s z))
+
 example4 : BNat
-example4 = s (s (s (s z)))
+example4 = plus example2 example2
 
 
 main : IO ()
 main = do
   putStrLn (show exampleNil)
   putStrLn (show exampleCons)
-  putStrLn (show (zip exampleCons (drop 1 exampleCons)))
+  putStrLn (show (zip exampleCons (drop (s z) exampleCons)))
+  putStrLn (show (zip (take example2 exampleCons) exampleCons))
   putStrLn (show exampleNothing)
   putStrLn (show exampleJust)
   putStrLn (show examplePr)
