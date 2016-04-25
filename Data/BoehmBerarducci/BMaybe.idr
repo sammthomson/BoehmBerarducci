@@ -21,6 +21,9 @@ just a = MkBMaybe (\n, j => j a)
 isNothing : BMaybe a -> Bool
 isNothing ma = foldInto ma True (\a => False)
 
+isJust : BMaybe a -> Bool
+isJust ma = foldInto ma False (\a => True)
+
 Functor BMaybe where
   map f ma = foldInto ma
     nothing
