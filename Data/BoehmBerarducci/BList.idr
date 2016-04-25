@@ -45,6 +45,11 @@ Alternative BList where
 Monad BList where
   ma >>= f = concatMap f ma
 
+Traversable BList where
+  traverse f xs = foldInto xs
+    (pure nil)
+    (\x, acc => [| cons (f x) acc |])
+
 
 isEmpty : BList a -> Bool
 isEmpty = foldr (\a, acc => False) True

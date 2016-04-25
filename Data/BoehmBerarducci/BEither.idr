@@ -30,6 +30,17 @@ Functor (BEither a) where
     (\l => left l)
     (\r => right (f r))
 
+Applicative (BEither e) where
+    pure = right
+    x <*> y = foldInto x
+      left
+      (\f => foldInto y
+        left
+        (right . f))
+
+Monad (BEither e) where
+  mx >>= f = foldInto mx left f
+
 (Eq a, Eq b) => Eq (BEither a b) where
   x == y = foldInto x
     (\xl => foldInto y

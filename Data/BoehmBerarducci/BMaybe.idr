@@ -32,10 +32,25 @@ Applicative BMaybe where
     nothing
     (\f => map f ma)
 
+Alternative BMaybe where
+    empty = nothing
+    ma <|> mb = foldInto ma
+      mb
+      (\a => just a)
+
 Monad BMaybe where
   ma >>= f = foldInto ma
     nothing
     (\a => f a)
+
+Foldable BMaybe where
+  foldr op z mx = foldInto mx z (\x => op x z)
+
+Traversable BMaybe where
+  traverse f mx = foldInto mx
+    (pure nothing)
+    (\x => [| just (f x) |])
+
 
 Semigroup a => Semigroup (BMaybe a) where
   (<+>) = liftA2 (<+>)
