@@ -68,8 +68,8 @@ head' = map fst . unroll
 tail' : BList a -> BMaybe (BList a)
 tail' = map snd . unroll
 
-length : BList a -> Int
-length = foldr (\_, len => len + 1) 0
+length : BList a -> BNat
+length = foldr (\_, k => s k) z
 
 
 reverse : BList a -> BList a
@@ -117,6 +117,9 @@ zipWith f xs ys = (foldInto xs (const nil) op) ys where
 
 zip : BList a -> BList b -> BList (BPair a b)
 zip = zipWith pair
+
+replicate : BNat -> a -> BList a
+replicate n x = foldInto n nil (cons x)
 
 Eq a => Eq (BList a) where
   xs == ys = (length xs == length ys) && all (bUncurry (==)) (zip xs ys)
