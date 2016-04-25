@@ -34,6 +34,17 @@ Monoid (BList a) where
 Functor BList where
   map f xs = foldInto xs nil (\x, acc => cons (f x) acc)
 
+Applicative BList where
+  pure a = cons a nil
+  mf <*> ma = concatMap (\f => map f ma) mf
+
+Alternative BList where
+  empty = nil
+  (<|>) = (++)
+
+Monad BList where
+  ma >>= f = concatMap f ma
+
 
 isEmpty : BList a -> Bool
 isEmpty = foldr (\a, acc => False) True
