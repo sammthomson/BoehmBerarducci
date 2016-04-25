@@ -46,7 +46,7 @@ main = do
   putStrLn (show exampleNil)
   putStrLn (show exampleCons)
   putStrLn (show (zip exampleCons (drop (s z) exampleCons)))
-  putStrLn (show (zip (take example2 exampleCons) exampleCons))
+  putStrLn (show (zip (take example2 exampleCons) (reverse exampleCons)))
   putStrLn (show exampleNothing)
   putStrLn (show exampleJust)
   putStrLn (show examplePr)

@@ -57,8 +57,7 @@ length = foldr (\_, len => len + 1) 0
 
 
 reverse : BList a -> BList a
-reverse xs = (foldInto xs id op) nil where
-  op x prependXsTail = \extra => prependXsTail (cons x extra)
+reverse = foldl (flip cons) nil
 
 last' : BList a -> BMaybe a
 last' = head' . reverse
