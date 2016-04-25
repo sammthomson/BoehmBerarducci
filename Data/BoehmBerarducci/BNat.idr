@@ -42,13 +42,25 @@ plus m n = foldInto m n s
 mult : (m, n : BNat) -> BNat
 mult m n = foldInto m z (plus n)
 
-toIntBNat : BNat -> Int
-toIntBNat n = foldInto n 0 ((+) 1)
+toIntegerBNat : BNat -> Integer
+toIntegerBNat n = foldInto n 0 ((+) 1)
 
+||| Aaaah, recursive!
+fromIntegerBNat : Integer -> BNat
+fromIntegerBNat i =
+  if (i > 0) then
+    s (fromIntegerBNat (assert_smaller i (i - 1)))
+  else
+    z
+
+Num BNat where
+  (+) = plus
+  (*) = mult
+  fromInteger = fromIntegerBNat
 
 Eq BNat where
   m == n = (foldInto m isZero step) n where
     step eqPredM = \n' => foldInto (pred n') False eqPredM
 
 Show BNat where
-  showPrec d n = showCon d "BNat" (showArg (toIntBNat n))
+  showPrec d n = showCon d "BNat" (showArg (toIntegerBNat n))
