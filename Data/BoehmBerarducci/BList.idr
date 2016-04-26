@@ -96,10 +96,8 @@ take n xs = (foldInto xs (const nil) op) n where
     (\k' => cons a (takeXsTail k'))
 
 drop : BNat -> BList a -> BList a
-drop n xs = (foldInto xs (const nil) op) n where
-  op a dropXsTail k = foldInto (unroll k)
-    (cons a (dropXsTail z))
-    (\k' => dropXsTail k')
+drop n xs = foldInto n xs dropOne where
+  dropOne ys = foldInto (tail' ys) nil id
 
 dropWhile : (a -> Bool) -> BList a -> BList a
 dropWhile p xs = (foldInto xs (const nil) op) True where
