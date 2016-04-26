@@ -25,6 +25,10 @@ fst = fold (\a, b => a)
 snd : BPair a b -> b
 snd = fold (\a, b => b)
 
+swap : BPair a b -> BPair b a
+swap = fold (flip pair)
+
+
 Functor (BPair a) where
   map f = fold (\a, b => pair a (f b))
 
