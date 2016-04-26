@@ -51,8 +51,11 @@ Traversable BList where
     (\x, acc => [| cons (f x) acc |])
 
 
-isEmpty : BList a -> Bool
-isEmpty = foldr (\a, acc => False) True
+isNil : BList a -> Bool
+isNil = foldr (\_, _ => False) True
+
+isCons : BList a -> Bool
+isCons = not . isNil
 
 roll : BMaybe (BPair a (BList a)) -> BList a
 roll m = foldInto m nil (bUncurry cons)
