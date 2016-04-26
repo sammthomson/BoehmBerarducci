@@ -43,15 +43,15 @@ example4 = plus example2 example2
 
 main : IO ()
 main = do
-  putStrLn (show exampleNil)
-  putStrLn (show exampleCons)
-  putStrLn (show (zip exampleCons (drop (s z) exampleCons)))
-  putStrLn (show (zip (take example2 exampleCons) (reverse exampleCons)))
-  putStrLn (show exampleNothing)
-  putStrLn (show exampleJust)
-  putStrLn (show examplePr)
-  putStrLn (show exampleLeft)
-  putStrLn (show exampleRight)
-  putStrLn (show example4)
-  putStrLn (show (mult example4 example4))
+  printLn exampleNil
+  printLn exampleCons
+  printLn (zip exampleCons (drop (s z) exampleCons))
+  printLn (zip (take example2 exampleCons) (reverse exampleCons))
+  printLn exampleNothing
+  printLn exampleJust
+  printLn examplePr
+  printLn exampleLeft
+  printLn exampleRight
+  printLn example4
+  printLn (mult example4 example4)
   putStrLn ""
