@@ -8,6 +8,8 @@ import Data.BoehmBerarducci.BNat
 %access public export
 
 
+||| see http://okmij.org/ftp/Haskell/zip-folds.lhs ,
+||| http://okmij.org/ftp/tagless-final/course/Boehm-Berarducci.html
 data BList a = MkBList ({r: Type} -> (nil: r) -> (cons: a -> r -> r) -> r)
 
 foldInto : BList a -> (nil: r) -> (cons: a -> r -> r) -> r
@@ -58,7 +60,7 @@ isCons : BList a -> Bool
 isCons = not . isNil
 
 roll : BMaybe (BPair a (BList a)) -> BList a
-roll m = foldInto m nil (bUncurry cons)
+roll m = foldInto m nil (uncurry cons)
 
 unroll : BList a -> BMaybe (BPair a (BList a))
 unroll xs = foldInto xs
@@ -114,7 +116,7 @@ zipWith : (a -> b -> c) -> BList a -> BList b -> BList c
 zipWith f xs ys = (foldInto xs (const nil) op) ys where
     op x zipWithXsTail = \ys' => foldInto (unroll ys')
         nil
-        (bUncurry (\y, ysTail => cons (f x y) (zipWithXsTail ysTail)))
+        (uncurry (\y, ysTail => cons (f x y) (zipWithXsTail ysTail)))
 
 zip : BList a -> BList b -> BList (BPair a b)
 zip = zipWith pair
@@ -123,10 +125,10 @@ replicate : BNat -> a -> BList a
 replicate n x = foldInto n nil (cons x)
 
 Eq a => Eq (BList a) where
-  xs == ys = (length xs == length ys) && all (bUncurry (==)) (zip xs ys)
+  xs == ys = (length xs == length ys) && all (BPair.uncurry (==)) (zip xs ys)
 
 Show a => Show (BList a) where
   show xs = "BList [" ++ (show' xs) ++ "]" where
     show' ys = foldInto (unroll (map show ys))
       ""
-      (bUncurry (\y, ysTail => y ++ concatMap ((++) ", ") ysTail))
+      (uncurry (\y, ysTail => y ++ concatMap ((++) ", ") ysTail))

@@ -13,8 +13,8 @@ foldInto (MkBPair x) = x
 fold : (a -> b -> r) -> BPair a b -> r
 fold f x = foldInto x f
 
-bUncurry : (a -> b -> r) -> (BPair a b -> r)
-bUncurry = fold
+uncurry : (a -> b -> r) -> (BPair a b -> r)
+uncurry = fold
 
 pair : a -> b -> BPair a b
 pair a b = MkBPair (\f => f a b)
