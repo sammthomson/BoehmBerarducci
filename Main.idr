@@ -6,6 +6,7 @@ import Data.BoehmBerarducci.BPair
 import Data.BoehmBerarducci.BEither
 import Data.BoehmBerarducci.BNat
 import Data.BoehmBerarducci.BInt
+import Data.BoehmBerarducci.BBTree
 
 %default total
 %access public export
@@ -41,6 +42,9 @@ example2 = (s (s z))
 example4 : BNat
 example4 = plus example2 example2
 
+exampleNode : BBTree Int String
+exampleNode = node 2 (leaf "a") (leaf "b")
+
 
 main : IO ()
 main = do
@@ -57,4 +61,5 @@ main = do
   printLn (mult example4 example4)
   printLn (the BInt (pred z))
   printLn (mult (neg example4) (pos example4))
+  printLn exampleNode
   putStrLn ""
