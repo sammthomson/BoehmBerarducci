@@ -5,6 +5,7 @@ import Data.BoehmBerarducci.BMaybe
 import Data.BoehmBerarducci.BPair
 import Data.BoehmBerarducci.BEither
 import Data.BoehmBerarducci.BNat
+import Data.BoehmBerarducci.BInt
 
 %default total
 %access public export
@@ -54,4 +55,6 @@ main = do
   printLn exampleRight
   printLn example4
   printLn (mult example4 example4)
+  printLn (the BInt (pred z))
+  printLn (mult (neg example4) (pos example4))
   putStrLn ""
