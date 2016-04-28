@@ -30,7 +30,7 @@ z : BInt
 z = pos z
 
 neg : BNat -> BInt
-neg x = foldInto (pred x) z negS
+neg x = foldInto (pred' x) z negS
 
 sign : BInt -> BSign
 sign = fold
@@ -45,7 +45,7 @@ succ = fold (pos . s) neg
 
 pred : BInt -> BInt
 pred i = foldInto i
-  (\p => foldInto (pred p) (neg (s z)) pos)
+  (\p => foldInto (pred' p) (neg (s z)) pos)
   (neg . s . s)
 
 plus : (i, j : BInt) -> BInt

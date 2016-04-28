@@ -33,8 +33,8 @@ roll m = foldInto m z s
 unroll : BNat -> BMaybe BNat
 unroll n = foldInto n nothing (\p => just (roll p))
 
-pred : BNat -> BMaybe BNat
-pred = unroll
+pred' : BNat -> BMaybe BNat
+pred' = unroll
 
 plus : (m, n : BNat) -> BNat
 plus m n = foldInto m n s
@@ -60,7 +60,12 @@ Num BNat where
 
 Eq BNat where
   m == n = (foldInto m isZero step) n where
-    step eqPredM = \n' => foldInto (pred n') False eqPredM
+    step eqPredM = \n' => foldInto (pred' n') False eqPredM
+
+Ord BNat where
+  compare m n = (foldInto m compare0 step) n where
+    compare0 k = foldInto k EQ (const LT)
+    step comparePred k = foldInto (pred' k) GT comparePred
 
 Show BNat where
   showPrec d n = showCon d "BNat" (showArg (toIntegerBNat n))
