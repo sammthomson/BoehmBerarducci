@@ -7,6 +7,7 @@ import Data.BoehmBerarducci.BEither
 import Data.BoehmBerarducci.BNat
 import Data.BoehmBerarducci.BInt
 import Data.BoehmBerarducci.BBTree
+import Data.BoehmBerarducci.BTuple3
 
 %default total
 %access public export
@@ -29,6 +30,8 @@ exampleJust = just 1
 examplePr : BPair Int String
 examplePr = pair 1 "asdf"
 
+exampleTr : BTuple3 Int String (BMaybe BNat)
+exampleTr = tuple3 8 "ink" (just 44)
 
 exampleLeft : BEither Int String
 exampleLeft = left 1
@@ -55,6 +58,7 @@ main = do
   printLn exampleNothing
   printLn exampleJust
   printLn examplePr
+  printLn exampleTr
   printLn exampleLeft
   printLn exampleRight
   printLn example4

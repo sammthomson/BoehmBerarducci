@@ -19,6 +19,9 @@ uncurry = fold
 pair : a -> b -> BPair a b
 pair a b = MkBPair (\f => f a b)
 
+curry : (BPair a b -> r) -> a -> b -> r
+curry f a b = f (pair a b)
+
 fst : BPair a b -> a
 fst = fold (\a, b => a)
 

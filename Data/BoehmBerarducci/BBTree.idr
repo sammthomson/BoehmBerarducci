@@ -1,7 +1,7 @@
 module Data.BoehmBerarducci.BBTree
 
 import Data.BoehmBerarducci.BEither
-import Data.BoehmBerarducci.BPair
+import Data.BoehmBerarducci.BTuple3
 import Data.BoehmBerarducci.BNat
 import Data.BoehmBerarducci.BList
 
@@ -29,13 +29,13 @@ isLeaf = fold (\_ => True) (\_, _, _ => False)
 isNode : BBTree n a -> Bool
 isNode = fold (\_ => False) (\_, _, _ => True)
 
-roll : BEither a (BPair n (BPair (BBTree n a) (BBTree n a))) -> BBTree n a
-roll e = foldInto e leaf (uncurry (uncurry . node))
+roll : BEither a (BTuple3 n (BBTree n a) (BBTree n a)) -> BBTree n a
+roll e = foldInto e leaf (uncurry3 node)
 
-unroll : BBTree n a -> BEither a (BPair n (BPair (BBTree n a) (BBTree n a)))
+unroll : BBTree n a -> BEither a (BTuple3 n (BBTree n a) (BBTree n a))
 unroll = fold
   left
-  (\v, l, r => right (pair v (pair (roll l) (roll r))))
+  (\v, l, r => right (tuple3 v (roll l) (roll r)))
 
 Semigroup (BBTree () l) where
   (<+>) = node ()
@@ -64,10 +64,10 @@ depth = fold
   (\_, l, r => 1 + max l r)
 
 numLeaves : BBTree n a -> BNat
-numLeaves = fold (\_ => 1) (\_, l, r => l + r)
+numLeaves = fold (const 1) (const (+))
 
 numNodes : BBTree n a -> BNat
-numNodes = fold (\_ => 0) (\_, l, r => 1 + l + r)
+numNodes = fold (const 0) (\_, l, r => 1 + l + r)
 
 reverse : BBTree n a -> BBTree n a
 reverse = fold leaf (flip . node)
@@ -79,16 +79,16 @@ nodes : BBTree n a -> BList n
 nodes = fold (const nil) (\v, l, r => l ++ (cons v r))
 
 leaves : BBTree n a -> BList a
-leaves = fold pure (\_, l, r => l ++ r)
+leaves = fold pure (const (++))
 
 (Eq a, Eq n) => Eq (BBTree n a) where
   (==) = fold
       (\xa => fold ((==) xa) (\_, _, _ => False))
       (\xv, eqL, eqR, y => foldInto (unroll y)
         (const False)
-        (uncurry (\yv => uncurry (\yl, yr =>
+        (uncurry3 (\yv, yl, yr =>
           xv == yv && eqL yl && eqR yr
-        )))
+        ))
       )
 
 (Show a, Show n) => Show (BBTree n a) where
