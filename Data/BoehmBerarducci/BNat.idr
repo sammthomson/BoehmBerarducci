@@ -6,12 +6,12 @@ import Data.BoehmBerarducci.BMaybe
 %access public export
 
 
-data BNat = MkBNat ({r: Type} -> (zero: r) -> (succ: r -> r) -> r)
+data BNat = MkBNat ({r : Type} -> (zero : r) -> (succ : r -> r) -> r)
 
-foldInto : BNat -> (zero: r) -> (succ: r -> r) -> r
+foldInto : BNat -> (zero : r) -> (succ : r -> r) -> r
 foldInto (MkBNat x) = x
 
-fold : (zero: r) -> (succ: r -> r) -> BNat -> r
+fold : (zero : r) -> (succ : r -> r) -> BNat -> r
 fold z s n = foldInto n z s
 
 z : BNat

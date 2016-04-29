@@ -10,9 +10,9 @@ import Data.BoehmBerarducci.BNat
 
 ||| see http://okmij.org/ftp/Haskell/zip-folds.lhs ,
 ||| http://okmij.org/ftp/tagless-final/course/Boehm-Berarducci.html
-data BList a = MkBList ({r: Type} -> (nil: r) -> (cons: a -> r -> r) -> r)
+data BList a = MkBList ({r : Type} -> (nil : r) -> (cons : a -> r -> r) -> r)
 
-foldInto : BList a -> (nil: r) -> (cons: a -> r -> r) -> r
+foldInto : BList a -> (nil : r) -> (cons : a -> r -> r) -> r
 foldInto (MkBList xs) = xs
 
 Foldable BList where

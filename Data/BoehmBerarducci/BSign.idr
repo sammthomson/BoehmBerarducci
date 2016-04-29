@@ -7,7 +7,7 @@ module Data.BoehmBerarducci.BSign
 data BSign = MkBSign ({r : Type} -> (n : r) -> (z : r) -> (p : r) -> r)
 
 foldInto : BSign -> (n : r) -> (z : r) -> (p : r) -> r
-foldInto (MkBSign sgn) = sgn
+foldInto (MkBSign s) = s
 
 fold : (n : r) -> (z : r) -> (p : r) -> BSign -> r
 fold n z p s = foldInto s n z p
@@ -34,7 +34,7 @@ negate : BSign -> BSign
 negate = fold positive zero negative
 
 mult : (i, j : BSign) -> BSign
-mult i j = foldInto i (negate j) zero j
+mult = fold negate (const zero) id
 
 toIntegerBSign : BSign -> Integer
 toIntegerBSign = fold (-1) 0 1

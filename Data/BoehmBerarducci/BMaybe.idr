@@ -4,9 +4,9 @@ module Data.BoehmBerarducci.BMaybe
 %access public export
 
 
-data BMaybe a = MkBMaybe ({r: Type} -> (nothing: r) -> (just: a -> r) -> r)
+data BMaybe a = MkBMaybe ({r : Type} -> (nothing : r) -> (just : a -> r) -> r)
 
-foldInto : BMaybe a -> (nothing: r) -> (just: a -> r) -> r
+foldInto : BMaybe a -> (nothing : r) -> (just : a -> r) -> r
 foldInto (MkBMaybe ma) = ma
 
 fold : r -> (a -> r) -> BMaybe a -> r

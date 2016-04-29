@@ -4,9 +4,9 @@ module Data.BoehmBerarducci.BPair
 %access public export
 
 
-data BPair a b = MkBPair ({r: Type} -> (pair: a -> b -> r) -> r)
+data BPair a b = MkBPair ({r : Type} -> (pair : a -> b -> r) -> r)
 
-foldInto : BPair a b -> (pair: a -> b -> r) -> r
+foldInto : BPair a b -> (pair : a -> b -> r) -> r
 foldInto (MkBPair x) = x
 
 ||| aka uncurry

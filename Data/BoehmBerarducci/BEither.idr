@@ -4,9 +4,9 @@ module Data.BoehmBerarducci.BEither
 %access public export
 
 
-data BEither a b = MkBEither ({r: Type} -> (left: a -> r) -> (right: b -> r) -> r)
+data BEither a b = MkBEither ({r : Type} -> (left : a -> r) -> (right : b -> r) -> r)
 
-foldInto : BEither a b -> (left: a -> r) -> (right: b -> r) -> r
+foldInto : BEither a b -> (left : a -> r) -> (right : b -> r) -> r
 foldInto (MkBEither x) = x
 
 fold : (a -> r) -> (b -> r) -> BEither a b -> r
